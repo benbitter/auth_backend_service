@@ -3,14 +3,19 @@ WORKDIR /usr/src/app
 
 ENV NODE_ENV=production
 
-# Copy package files and install dependencies
+# Install build dependencies for compiling native modules (like bcrypt)
+RUN apk add --no-cache --virtual .build-deps python3 make g++
+
+# Copy package files and install production dependencies
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci --omit=dev \
+    && apk del .build-deps \
+    && chown -R node:node /usr/src/app
 
-# Copy the rest of your application code
-COPY . .
+# Copy application source code
+COPY --chown=node:node . .
 
-# Expose the port your utils service runs on
+# Expose the port the auth service runs on
 EXPOSE 3001
 
 USER node
