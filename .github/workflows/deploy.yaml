@@ -20,7 +20,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            cd /var/www/backend_auth
+            cd /var/www/auth_backend_service
             git pull origin main
             docker compose down
             docker compose build --no-cache
