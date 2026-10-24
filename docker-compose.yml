@@ -5,9 +5,6 @@ services:
       context: .
       dockerfile: Dockerfile
 
-    image: auth-service:latest
-    container_name: auth-service
-
     restart: unless-stopped
 
     env_file:
@@ -15,10 +12,7 @@ services:
 
     environment:
       NODE_ENV: production
-      PORT: 3001
-
-    ports:
-      - "127.0.0.1:5101:3001"
+      PORT: 3002
 
     init: true
 
@@ -27,7 +21,7 @@ services:
         - CMD
         - node
         - -e
-        - "fetch('http://127.0.0.1:3001/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+        - "fetch('http://127.0.0.1:3002/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
       interval: 30s
       timeout: 5s
       retries: 3

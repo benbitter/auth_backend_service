@@ -1,23 +1,18 @@
 FROM node:20-alpine
+
 WORKDIR /usr/src/app
 
-ENV NODE_ENV=production
-
-# Install build dependencies for compiling native modules (like bcrypt)
-RUN apk add --no-cache --virtual .build-deps python3 make g++
-
-# Copy package files and install production dependencies
+# Copy package descriptors first to leverage Docker layer caching
 COPY package*.json ./
-RUN npm ci --omit=dev \
-    && apk del .build-deps \
-    && chown -R node:node /usr/src/app
+
+# Install only production dependencies
+RUN npm install
 
 # Copy application source code
-COPY --chown=node:node . .
+COPY . .
 
-# Expose the port the auth service runs on
-EXPOSE 3001
+# Expose your application port (change 5000 if your server uses 3000/8080)
+EXPOSE 3002
 
-USER node
-
+# Start the application
 CMD ["node", "server.js"]

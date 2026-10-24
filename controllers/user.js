@@ -102,7 +102,7 @@ export const verifyUser = TryCatch(async (req, res, next) => {
     console.log("User data from Redis:", userData);
     await redisClient.del(verifyKey);
 
-    const { name, email, password } = JSON.parse(userData);
+    const { name, email, password } = userData;
 
     const newUser = new User({ name, email, password });
     await newUser.save();
